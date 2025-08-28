@@ -1,0 +1,44 @@
+# DB25 SQL Tokenizer CMake Configuration
+# Copyright (c) 2024 Chiradip Mandal
+# Author: Chiradip Mandal
+# Organization: Space-RF.org
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find required dependencies if any
+# find_dependency(Threads)
+
+# Include our exported targets
+include("${CMAKE_CURRENT_LIST_DIR}/DB25TokenizerTargets.cmake")
+
+# Check that all required components are available
+check_required_components(DB25Tokenizer)
+
+# Provide variables for consumers
+set(DB25Tokenizer_FOUND TRUE)
+set(DB25Tokenizer_VERSION @PROJECT_VERSION@)
+set(DB25Tokenizer_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set(DB25Tokenizer_LIBRARIES DB25Tokenizer::tokenizer)
+
+# SIMD level detection for consumers
+if(@AVX2_SUPPORTED@)
+    set(DB25Tokenizer_SIMD_LEVEL "AVX2")
+elseif(@SSE42_SUPPORTED@)
+    set(DB25Tokenizer_SIMD_LEVEL "SSE4.2")
+elseif(@ARM_NEON_SUPPORTED@)
+    set(DB25Tokenizer_SIMD_LEVEL "ARM_NEON")
+else()
+    set(DB25Tokenizer_SIMD_LEVEL "SCALAR")
+endif()
+
+# Export optimization features
+set(DB25Tokenizer_FEATURES
+    "SIMD:${DB25Tokenizer_SIMD_LEVEL}"
+    "TOKEN_PACKING:ON"
+    "GRAMMAR_DISPATCH:ON"
+    "BRANCH_PREDICTION:ON"
+    "PRECEDENCE_TABLES:ON"
+    "STRING_VIEWS:ON"
+)
