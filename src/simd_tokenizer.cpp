@@ -276,6 +276,7 @@ Token SimdTokenizer::scan_operator_or_delimiter(size_t start, uint32_t start_lin
             if ((ch == '<' && (next == '=' || next == '>')) ||
                 (ch == '>' && next == '=') ||
                 (ch == '!' && next == '=') ||
+                (ch == '=' && next == '=') ||  // Add support for ==
                 (ch == '|' && next == '|') ||
                 (ch == '&' && next == '&') ||
                 (ch == ':' && next == ':') ||
